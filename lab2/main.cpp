@@ -46,17 +46,6 @@ float determinant(Point a, Point b, Point c){
   return (b.x - a.x)*(c.y - a.y) - (c.x - a.x)*(b.y - a.y);
 }
 
-bool inTriangle(float a, float b, float c){
-  if (a<=1 && a>=0){
-    if (b<=1 && b>=0){
-      if(c<=1 && c>=0)
-        return true;
-    }
-  }
-
-  return false;
-}
-
 int main(void) {
 
   // make color vars for points A B and C
@@ -107,24 +96,27 @@ int main(void) {
   float alpha;
   float beta;
   float gamma;
+
   for (int i=minX; i < maxX; i++) {
     for (int j=minY; j < maxY; j++) {
       p.x = i;
       p.y = j;
-      alpha = determinant(b, c, p) / area;
-      beta = determinant(c, a, p) / area;
-      gamma = determinant(a, b, p) / area;
-      if (inTriangle(alpha, beta, gamma)){
-        clr.r = 1; //clrA.r*alpha + clrB.r*beta + clrC.r*gamma;
-        clr.b = 1; //clrA.b*alpha + clrB.b*beta + clrC.b*gamma;
-        clr.g = 1; //clrA.g*alpha + clrB.g*beta + clrC.g*gamma;
+      alpha = determinant(c, b, p) / area;
+      beta = determinant(a, c, p) / area;
+      gamma = determinant(b, a, p) / area;
+      if ((alpha >= 0 && alpha <= 1) &&
+          (beta >= 0 && beta <= 1) &&
+          (gamma >= 0 && gamma <= 1)) {
+        clr.r = clrA.r*alpha + clrB.r*beta + clrC.r*gamma;
+        clr.b = clrA.b*alpha + clrB.b*beta + clrC.b*gamma;
+        clr.g = clrA.g*alpha + clrB.g*beta + clrC.g*gamma;
         img.pixel(i, j, clr);
       }
     }
   }
 
   // write the targa file to disk
-  img.WriteTga((char *)"baller.tga", true); 
+  img.WriteTga((char *)"test.tga", true); 
   // true to scale to max color, false to clamp to 1.0
 
 }
